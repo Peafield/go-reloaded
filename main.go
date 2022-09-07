@@ -20,35 +20,35 @@ func getTextSlice() []string {
 	return strings.Split(string(body), " ")
 }
 
-func remove(slice []string, s int) []string {
-	return append(slice[:s], slice[s+1:]...)
-}
-
-// TO DO: Range through []string outside of any particular function.
-func hexAndBin(e []string) []string {
+func selector(e []string) []string {
 	for i, ch := range e {
-		if ch == "(hex)" {
-			hexText, err := strconv.ParseInt(e[i-1], 16, 64)
-			if err != nil {
-				log.Fatalf("Error %v", err)
-			}
-			e[i-1] = strconv.Itoa(int(hexText))
+		switch {
+		case ch == "(hex)":
+			e[i-1] = hexAndBin(e[i-1], 16)
 			remove(e, i)
-		}
-		if ch == "(bin)" {
-			hexText, err := strconv.ParseInt(e[i-1], 2, 64)
-			if err != nil {
-				log.Fatalf("Error %v", err)
-			}
-			e[i-1] = strconv.Itoa(int(hexText))
+		case ch == "(bin)":
+			e[i-1] = hexAndBin(e[i-1], 2)
 			remove(e, i)
 		}
 	}
 	return e
 }
 
+func hexAndBin(s string, i int) string {
+	hexText, err := strconv.ParseInt(s, i, 64)
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+	hexed := strconv.Itoa(int(hexText))
+	return hexed
+}
+
+func remove(slice []string, s int) []string {
+	return append(slice[:s], slice[s+1:]...)
+}
+
 func main() {
 	e := editor{}
 	e.text = getTextSlice()
-	fmt.Println(hexAndBin(e.text))
+	fmt.Println(selector(e.text))
 }
