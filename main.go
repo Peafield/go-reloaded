@@ -8,10 +8,6 @@ import (
 	"strings"
 )
 
-type editor struct {
-	text []string
-}
-
 func getTextSlice() []string {
 	body, err := os.ReadFile("sample.txt")
 	if err != nil {
@@ -132,7 +128,6 @@ func converToString(s []string) string {
 }
 
 func main() {
-	e := editor{}
-	e.text = getTextSlice()
-	writeToFile(converToString(selector(e.text)))
+	e := getTextSlice()
+	writeToFile(converToString(selector(e)))
 }
