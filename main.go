@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -13,11 +13,18 @@ type editor struct {
 }
 
 func getTextSlice() []string {
-	body, err := ioutil.ReadFile("sample.txt")
+	body, err := os.ReadFile("sample.txt")
 	if err != nil {
 		log.Fatalf("unable to read file: %v", err)
 	}
 	return strings.Split(string(body), " ")
+}
+
+func writeToFile(s string) {
+	err := os.WriteFile("result.txt", []byte(s), 0666)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func selector(e []string) []string {
@@ -36,7 +43,7 @@ func selector(e []string) []string {
 					if err != nil {
 						fmt.Println("Error:", err)
 					}
-					for a >= 0 {
+					for a > 0 {
 						e[i-a] = up(e[i-a])
 						a--
 					}
@@ -45,7 +52,6 @@ func selector(e []string) []string {
 						e = remove(e, i)
 						sum--
 					}
-
 				} else {
 					e[i-1] = cap(e[i-1])
 					e = remove(e, i)
@@ -56,7 +62,7 @@ func selector(e []string) []string {
 					if err != nil {
 						fmt.Println("Error:", err)
 					}
-					for a >= 0 {
+					for a > 0 {
 						e[i-a] = low(e[i-a])
 						a--
 					}
@@ -76,7 +82,7 @@ func selector(e []string) []string {
 					if err != nil {
 						fmt.Println("Error:", err)
 					}
-					for a >= 0 {
+					for a > 0 {
 						e[i-a] = cap(e[i-a])
 						a--
 					}
@@ -106,7 +112,7 @@ func hexAndBin(s string, i int) string {
 }
 
 func up(s string) string {
-	return strings.ToUpper(s)
+	return strings.TrimSpace(strings.ToUpper(s))
 }
 
 func low(s string) string {
@@ -121,9 +127,12 @@ func remove(slice []string, s int) []string {
 	return append(slice[:s], slice[s+1:]...)
 }
 
+func converToString(s []string) string {
+	return strings.Join(s, " ")
+}
+
 func main() {
 	e := editor{}
 	e.text = getTextSlice()
-	str := selector(e.text)
-	fmt.Println(str)
+	writeToFile(converToString(selector(e.text)))
 }
