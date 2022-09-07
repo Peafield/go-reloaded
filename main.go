@@ -25,10 +25,10 @@ func selector(e []string) []string {
 		switch {
 		case ch == "(hex)":
 			e[i-1] = hexAndBin(e[i-1], 16)
-			remove(e, i)
+			e = remove(e, i)
 		case ch == "(bin)":
 			e[i-1] = hexAndBin(e[i-1], 2)
-			remove(e, i)
+			e = remove(e, i)
 		}
 	}
 	return e
@@ -39,8 +39,7 @@ func hexAndBin(s string, i int) string {
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
-	hexed := strconv.Itoa(int(hexText))
-	return hexed
+	return strconv.Itoa(int(hexText))
 }
 
 func remove(slice []string, s int) []string {
