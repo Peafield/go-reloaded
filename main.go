@@ -29,6 +29,15 @@ func selector(e []string) []string {
 		case ch == "(bin)":
 			e[i-1] = hexAndBin(e[i-1], 2)
 			e = remove(e, i)
+		case ch == "(up)":
+			e[i-1] = up(e[i-1])
+			e = remove(e, i)
+		case ch == "(low)":
+			e[i-1] = low(e[i-1])
+			e = remove(e, i)
+		case ch == "(cap)":
+			e[i-1] = cap(e[i-1])
+			e = remove(e, i)
 		}
 	}
 	return e
@@ -40,6 +49,18 @@ func hexAndBin(s string, i int) string {
 		fmt.Println("Error:", err)
 	}
 	return strconv.Itoa(int(hexText))
+}
+
+func up(s string) string {
+	return strings.ToUpper(s)
+}
+
+func low(s string) string {
+	return strings.ToLower(s)
+}
+
+func cap(s string) string {
+	return strings.Title(s)
 }
 
 func remove(slice []string, s int) []string {
