@@ -94,14 +94,23 @@ func selector(e []string) []string {
 				}
 			}
 		}
+		// TO DO: Make work with both uppercase and lower case
 		switch {
 		case ch == "a":
 			if isVowel(e[i+1][:1]) {
 				e[i] = "an"
 			}
+		case ch == "A":
+			if isVowel(e[i+1][:1]) {
+				e[i] = "An"
+			}
 		case ch == "an":
 			if !(isVowel(e[i+1][:1])) {
 				e[i] = "a"
+			}
+		case ch == "An":
+			if !(isVowel(e[i+1][:1])) {
+				e[i] = "A"
 			}
 		}
 	}
