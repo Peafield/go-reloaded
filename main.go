@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// getTextSlice creates a string slice of the text from 'sample.txt'
 func getTextSlice() []string {
 	body, err := os.ReadFile("sample.txt")
 	if err != nil {
@@ -16,6 +17,7 @@ func getTextSlice() []string {
 	return strings.Split(string(body), " ")
 }
 
+// writeToFile writes the completed string to a file called 'result.txt'
 func writeToFile(s string) {
 	err := os.WriteFile("result.txt", []byte(s), 0666)
 	if err != nil {
@@ -23,6 +25,7 @@ func writeToFile(s string) {
 	}
 }
 
+// selector loops through a string slice and applies different functions depending on input.
 func selector(e []string) []string {
 	for i, ch := range e {
 		if ch[:1] == "(" {
@@ -94,7 +97,6 @@ func selector(e []string) []string {
 				}
 			}
 		}
-		// TO DO: Make work with both uppercase and lower case
 		switch {
 		case ch == "a":
 			if isVowel(e[i+1][:1]) {
@@ -117,6 +119,7 @@ func selector(e []string) []string {
 	return e
 }
 
+// hexAndBin converts a string to it's hex or bin value and returns it as a string
 func hexAndBin(s string, i int) string {
 	hexText, err := strconv.ParseInt(s, i, 64)
 	if err != nil {
@@ -125,26 +128,32 @@ func hexAndBin(s string, i int) string {
 	return strconv.Itoa(int(hexText))
 }
 
+// up makes a string uppercase
 func up(s string) string {
-	return strings.TrimSpace(strings.ToUpper(s))
+	return strings.ToUpper(s)
 }
 
+// low makes a string lowercase
 func low(s string) string {
 	return strings.ToLower(s)
 }
 
+// cap capitalise a string
 func cap(s string) string {
 	return strings.Title(s)
 }
 
+// remove removes an element from a slice
 func remove(slice []string, s int) []string {
 	return append(slice[:s], slice[s+1:]...)
 }
 
+// convertToString converts a string slice into a string
 func converToString(s []string) string {
 	return strings.Join(s, " ")
 }
 
+// isVowel checks with a string is a vowel or not
 func isVowel(s string) bool {
 	b := []rune(s)
 	result := false
