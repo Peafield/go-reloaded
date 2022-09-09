@@ -92,7 +92,16 @@ func selector(e []string) []string {
 					e[i-1] = cap(e[i-1])
 					e = remove(e, i)
 				}
-
+			}
+		}
+		switch {
+		case ch == "a":
+			if isVowel(e[i+1][:1]) {
+				e[i] = "an"
+			}
+		case ch == "an":
+			if !(isVowel(e[i+1][:1])) {
+				e[i] = "a"
 			}
 		}
 	}
@@ -127,7 +136,20 @@ func converToString(s []string) string {
 	return strings.Join(s, " ")
 }
 
+func isVowel(s string) bool {
+	b := []rune(s)
+	result := false
+	for _, ch := range b {
+		if ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u' {
+			result = true
+		}
+	}
+	return result
+}
+
 func main() {
 	e := getTextSlice()
 	writeToFile(converToString(selector(e)))
 }
+
+//TO DO: resolve issue of extra space after e.g. "...word (cap, 6) ,..." - results in "...word  , ..."
