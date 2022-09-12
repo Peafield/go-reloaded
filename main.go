@@ -115,6 +115,9 @@ func selector(e []string) []string {
 				e[i] = "A"
 			}
 		}
+		if ch == "," {
+			fmt.Println("Found")
+		}
 	}
 	return e
 }
@@ -143,16 +146,6 @@ func cap(s string) string {
 	return strings.Title(s)
 }
 
-// remove removes an element from a slice
-func remove(slice []string, s int) []string {
-	return append(slice[:s], slice[s+1:]...)
-}
-
-// convertToString converts a string slice into a string
-func converToString(s []string) string {
-	return strings.Join(s, " ")
-}
-
 // isVowel checks with a string is a vowel or not
 func isVowel(s string) bool {
 	b := []rune(s)
@@ -165,9 +158,40 @@ func isVowel(s string) bool {
 	return result
 }
 
-func main() {
-	e := getTextSlice()
-	writeToFile(converToString(selector(e)))
+func isPunctuation(c rune) bool {
+	delim := false
+	if c >= 33 && c <= 47 {
+		delim = true
+	}
+	return delim
 }
 
-//TO DO: resolve issue of extra space after e.g. "...word (cap, 6) ,..." - results in "...word  , ..."
+// remove removes an element from a slice
+func remove(slice []string, s int) []string {
+	return append(slice[:s], slice[s+1:]...)
+}
+
+// convertToString converts a string slice into a string
+func converToString(s []string) string {
+	return strings.Join(s, " ")
+}
+
+// TO DO: Make work for all punctuation not just comma
+// converToRuneRemoveSpace converts a string to a slice of rune and then deletes white space
+func converToRuneRemoveSpace(s string) []rune {
+	r := []rune(s)
+	for i, ch := range r {
+		fmt.Println(ch)
+		if isPunctuation(ch) && r[i-1] == 32 {
+			r = append(r[:i-1], r[i:]...)
+		}
+	}
+	return r
+}
+
+func main() {
+	e := getTextSlice()
+	s := selector(e)
+	str := converToString(s)
+	writeToFile(string(converToRuneRemoveSpace(str)))
+}
