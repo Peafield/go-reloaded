@@ -176,12 +176,21 @@ func converToString(s []string) string {
 	return strings.Join(s, " ")
 }
 
-// TO DO: Make single quotation marks work!
+// TO DO: Add a space after punctuation if necessary e.g. "folder,do...""
 // converToRuneRemoveSpace converts a string to a slice of rune and then deletes white space
-func converToRuneRemoveSpace(s string) []rune {
+func converToRuneRemoveOrAddSpace(s string) []rune {
 	r := []rune(s)
 	for i, ch := range r {
-		if i < len(r)-1 && isPunctuation(ch) && r[i-1] == 32 {
+		if i < len(r)-1 && ch == 44 && r[i+1] != 32 {
+			// Below doesn't work
+			s := []rune{' '}
+			r = append(r[:i+1], append(s, r[i:]...)...)
+			r[i] = 32
+		}
+		if i < len(r)-1 && ch == 39 && r[i+1] == 32 {
+			r = append(r[:i+1], r[i+2:]...)
+		}
+		if i < len(r)-1 && isPunctuation(ch) && r[i-1] == 32 || i == len(r)-1 && ch == 39 && r[i-1] == 32 {
 			r = append(r[:i-1], r[i:]...)
 		}
 	}
@@ -192,5 +201,5 @@ func main() {
 	e := getTextSlice()
 	s := selector(e)
 	str := converToString(s)
-	writeToFile(string(converToRuneRemoveSpace(str)))
+	writeToFile(string(converToRuneRemoveOrAddSpace(str)))
 }
