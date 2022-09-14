@@ -176,13 +176,12 @@ func converToString(s []string) string {
 	return strings.Join(s, " ")
 }
 
-// TO DO: Make work for all punctuation not just comma
+// TO DO: Make single quotation marks work!
 // converToRuneRemoveSpace converts a string to a slice of rune and then deletes white space
 func converToRuneRemoveSpace(s string) []rune {
 	r := []rune(s)
 	for i, ch := range r {
-		fmt.Println(ch)
-		if isPunctuation(ch) && r[i-1] == 32 {
+		if i < len(r)-1 && isPunctuation(ch) && r[i-1] == 32 {
 			r = append(r[:i-1], r[i:]...)
 		}
 	}
