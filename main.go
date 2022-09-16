@@ -171,6 +171,12 @@ func remove(slice []string, s int) []string {
 	return append(slice[:s], slice[s+1:]...)
 }
 
+func insert(r []rune, i int) []rune {
+	r = append(r[:i+1], r[i:]...)
+	r[i] = 32
+	return r
+}
+
 // convertToString converts a string slice into a string
 func converToString(s []string) string {
 	return strings.Join(s, " ")
@@ -181,18 +187,19 @@ func converToString(s []string) string {
 func converToRuneRemoveOrAddSpace(s string) []rune {
 	r := []rune(s)
 	for i, ch := range r {
-		if i < len(r)-1 && ch == 44 && r[i+1] != 32 {
-			// Below doesn't work
-			s := []rune{' '}
-			r = append(r[:i+1], append(s, r[i:]...)...)
-			r[i] = 32
+		// Deleting white space before all puncutation.
+		if (i < len(r)-1 && isPunctuation(ch) && r[i-1] == 32) || (i == len(r)-1 && isPunctuation(ch) && r[i-1] == 32) {
+			r = append(r[:i-1], r[i:]...)
 		}
+		// Deleting white space after apostrophes
 		if i < len(r)-1 && ch == 39 && r[i+1] == 32 {
 			r = append(r[:i+1], r[i+2:]...)
 		}
-		if i < len(r)-1 && isPunctuation(ch) && r[i-1] == 32 || i == len(r)-1 && ch == 39 && r[i-1] == 32 {
-			r = append(r[:i-1], r[i:]...)
+		// Inserting whitespace after commas
+		if i < len(r)-1 && ch == 44 && r[i+1] != 32 {
+			r = insert(r, i)
 		}
+
 	}
 	return r
 }
